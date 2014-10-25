@@ -25,4 +25,8 @@ typedef struct wifiFrame{
 
 wifiFrame createWifiFrame(uint16_t seqNum, char type, uint32_t data1, uint32_t data2, uint32_t data3, uint32_t data4);
 
+void wifiFrameToChar(wifiFrame wf, char * tab);
+
+wifiFrame wifiFrameFromChar(char tab[19]);
+
 #endif
