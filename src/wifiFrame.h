@@ -1,35 +1,66 @@
+/**
+ * \file wifiFrame.h
+ *
+ * \brief Wifi frame definition and utilities
+ *
+ * \author Yohan Marchiset
+ *
+ * \date 28 Oct 2014
+ */
+
+
 #ifndef __WIFI_FRAME__
 #define __WIFI_FRAME__
 
 #include <stdint.h>
 #include "frameTypes.h"
 
-/*
-	sequence number management :
-		max seq num : 256
-		seq num var : from 0 to 256
-*/
-
+/**
+ * \brief Converted size of a wifi frame in bytes
+ */
+#define CONVERTED_WIFI_FRAME_SIZE 19
+/**
+ * \brief Maximum sequence number for the wifi frames
+ */
 #define MAX_WIFI_SEQ_NUM 50
+
+/**
+ * \brief Current wifi frame sequence number
+ */
 extern uint16_t currentWifiSeqNum;
 
-/*
-	structure that will be sent as UDP data (our frame)
-*/
+/**
+ * \brief Structure used a frame for wifi communication
+ */
 typedef struct wifiFrame{
-	uint16_t seqNum;
-	char type;
-	uint32_t data[4];
+	uint16_t seqNum;	/**< Sequence number of the frame */
+	char type;			/**< Type of the frame, can be either d or t */
+	uint32_t data[4];	/**< Data contained in the frame : table of 4 times or distances */
 } wifiFrame;
 
-/*
-	Function for frame creation
-*/
-
+/**
+ * \brief Creation of a frame
+ * \param[in]	type	type of the frame to create, either TIME_FRAME or DISTANCE_FRAME
+ * \param[in]	data1	first data to send in the frame
+ * \param[in]	data2	second data to send in the frame
+ * \param[in]	data3	third data to send in the frame
+ * \param[in]	data4	fourth data to send in the frame
+ * \return 		a frame initialized with the values given as parameters and a generated sequence number
+ */
 wifiFrame createWifiFrame(char type, uint32_t data1, uint32_t data2, uint32_t data3, uint32_t data4);
 
-void wifiFrameToChar(wifiFrame wf, char * tab);
+/**
+ * \brief Conversion function : from frame to char *
+ * \param[in]	wf	wifi frame that will be converted
+ * \return		the converted char * version of the frame
+ */
+char * wifiFrameToChar(wifiFrame wf);
 
-wifiFrame wifiFrameFromChar(char tab[19]);
+/**
+ * \brief Conversion function : from char * to frame
+ * param[in]	tab	a char * to convert into a frame (must be a converted version of a frame or might fail)
+ * \return		a wifiFrame generated from the char * given as parameter
+ */
+wifiFrame wifiFrameFromChar(char * tab);
 
 #endif

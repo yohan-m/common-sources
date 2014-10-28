@@ -1,43 +1,126 @@
+/**
+ * \file usartFrame.h
+ *
+ * \brief Usart frame definition and utilities
+ *
+ * \author Yohan Marchiset
+ *
+ * \date 28 Oct 2014
+ */
+
 #ifndef __USART_FRAME__
 #define __USART_FRAME__
 
 #include <stdint.h>
 #include "frameTypes.h"
 
-/*
-	sequence number management :
-		max seq num : 256
-		seq num var : from 0 to 256
-*/
-
+/**
+ * \brief Converted size of an usart frame in bytes
+ */
+#define CONVERTED_USART_FRAME_SIZE 21
+/**
+ * \brief Maximum sequence number for the usart frames
+ */
 #define MAX_USART_SEQ_NUM 50
+
+/**
+ * \brief Current wifi frame sequence number
+ */
 extern uint16_t currentUsartSeqNum;
 
-/*
-	structure that will be sent from embedded STM to drone via USART
-*/
+/**
+ * \brief Structure used a frame for usart communication
+ */
 typedef struct usartFrame{
-	uint16_t seqNum;
-	char type;
-	uint32_t data[4];
-	uint16_t crc;
+	uint16_t seqNum;	/**< Sequence number of the frame */
+	char type;			/**< Type of the frame, can be either d or t */
+	uint32_t data[4];	/**< Data contained in the frame : table of 4 times or distances */
+	uint16_t crc;		/**< generated CRC from the three previous fields, used for integrity tests */
 } usartFrame;
 
+
 /*
-	Function for frame creation
+*	-----------------------------------------------------------
+*				public functions
+*	-----------------------------------------------------------
 */
 
+
+/**
+ * \brief Creation of a frame
+ * \param[in]	type	type of the frame to create, either TIME_FRAME or DISTANCE_FRAME
+ * \param[in]	data1	first data to send in the frame
+ * \param[in]	data2	second data to send in the frame
+ * \param[in]	data3	third data to send in the frame
+ * \param[in]	data4	fourth data to send in the frame
+ * \return 		a frame initialized with the values given as parameters and generated sequence number and CRC
+ */
 usartFrame createUsartFrame(char type, uint32_t data1, uint32_t data2, uint32_t data3, uint32_t data4);
 
 /*
-	creates a 16 bits crc from a char * representing the frame (seqNum, type and the 4 data)
+	API functions
 */
-uint16_t createCRC(char * tab, int tabLen);
+
+/**
+ * \brief Creation of a converted uint8_t version of a frame
+ * \param[in]	type	type of the frame to create, either TIME_FRAME or DISTANCE_FRAME
+ * \param[in]	data1	first data to send in the frame
+ * \param[in]	data2	second data to send in the frame
+ * \param[in]	data3	third data to send in the frame
+ * \param[in]	data4	fourth data to send in the frame
+ * \return 		a converted uint8_t version of a fully initialized frame with the given parameters and generated sequence number and CRC
+ */
+uint8_t * createSendableFrame(char type, uint32_t data1, uint32_t data2, uint32_t data3, uint32_t data4);
+
+
+/**
+ * \brief Conversion function for read data after transfer, able to check frame integrity
+ * \param[in]	read	the data read on the USART, must be a converted form of a frame
+ * \param[in]	uf		a pointer to retrieve the frame in its classic form
+ * \return		0 for success, 1 if integrity check fails
+ */
+uint8_t retrieveReadFrame(uint8_t * read, usartFrame * uf);
+
 
 /*
-	transforms a frame into a char * (used to create the necessary char* for the createCRC function)
-	does not include CRC in the generated char*
+	conversion function for usart frame
 */
+
+/**
+ * \brief Conversion function : from frame to uint8_t *
+ * \param[in]	uf	usart frame that will be converted
+ * \return		the converted uint8_t * version of the frame
+ */
+uint8_t * usartFrameToUint(usartFrame uf);
+
+/**
+ * \brief Conversion function : from uint8_t * to frame
+ * param[in]	tab	a uint8_t * to convert into a frame (must be a converted version of a frame or might fail)
+ * \return		a usartFrame generated from the uint8_t * given as parameter
+ */
+usartFrame usartFrameFromUint(uint8_t * toConvert);
+
+
+/*
+*	-----------------------------------------------------------
+*				private functions
+*	-----------------------------------------------------------
+*/
+
+
+/**
+ * \brief Creates a 16 bits CRC
+ * \param[in]	tab		char * representing the frame (seqNum, type and the 4 data)
+ * \param[in]	tabLen	len of the char * in number of elements
+ * \return		the calculated 16 bits CRC
+ */
+uint16_t createCRC(char * tab, uint8_t tabLen);
+
+/**
+ * \brief Transforms a frame into a char *
+ * \param[in]	f	usart frame to convert
+ * \param[in]	tab	char * used to retrieve the converted form of the frame, this form is used for CRC calculation purpose
+ */
 void usartFrameToChar(usartFrame f, char * tab);
 
 #endif

@@ -47,7 +47,8 @@
     *                                                                   *
     \*******************************************************************/
 
-
+#ifndef __CRC_LIB__
+#define __CRC_LIB__
 
 #define CRC_VERSION     "1.16"
 
@@ -64,3 +65,5 @@ unsigned short          update_crc_ccitt(  unsigned short crc, char c           
 unsigned short          update_crc_dnp(    unsigned short crc, char c                 );
 unsigned short          update_crc_kermit( unsigned short crc, char c                 );
 unsigned short          update_crc_sick(   unsigned short crc, char c, char prev_byte );
+
+#endif
