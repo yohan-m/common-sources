@@ -33,7 +33,7 @@ void wifiFrameToChar(wifiFrame wf, char * tab){
 	tab[18] = (char)(wf.data[3]&0x000000FF);
 }
 
-wifiFrame wifiFrameFromChar(char tab[19]){
+wifiFrame wifiFrameFromChar(char * tab){
 	wifiFrame wf;
 	wf.seqNum = ((uint16_t)((uint8_t)tab[0])<<8)+(uint16_t)((uint8_t)tab[1]);
 	wf.type = tab[2];

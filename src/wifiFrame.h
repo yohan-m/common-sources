@@ -2,6 +2,7 @@
 #define __WIFI_FRAME__
 
 #include <stdint.h>
+#include <stdio.h>
 
 /*
 	Frames types will be defined here
@@ -27,6 +28,6 @@ wifiFrame createWifiFrame(uint16_t seqNum, char type, uint32_t data1, uint32_t d
 
 void wifiFrameToChar(wifiFrame wf, char * tab);
 
-wifiFrame wifiFrameFromChar(char tab[19]);
+wifiFrame wifiFrameFromChar(char * tab);
 
 #endif
