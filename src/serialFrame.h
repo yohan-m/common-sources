@@ -1,42 +1,42 @@
 /**
- * \file usartFrame.h
+ * \file serialFrame.h
  *
- * \brief Usart frame definition and utilities
+ * \brief Serial frame definition and utilities
  *
  * \author Yohan Marchiset
  *
  * \date 28 Oct 2014
  */
 
-#ifndef __USART_FRAME__
-#define __USART_FRAME__
+#ifndef __SERIAL_FRAME__
+#define __SERIAL_FRAME__
 
 #include <stdint.h>
 #include "frameTypes.h"
 
 /**
- * \brief Converted size of an usart frame in bytes
+ * \brief Converted size of an serial frame in bytes
  */
-#define CONVERTED_USART_FRAME_SIZE 21
+#define CONVERTED_SERIAL_FRAME_SIZE 21
 /**
- * \brief Maximum sequence number for the usart frames
+ * \brief Maximum sequence number for the serial frames
  */
-#define MAX_USART_SEQ_NUM 50
+#define MAX_SERIAL_SEQ_NUM 50
 
 /**
- * \brief Current wifi frame sequence number
+ * \brief Current serial frame sequence number
  */
-extern uint16_t currentUsartSeqNum;
+extern uint16_t currentSerialSeqNum;
 
 /**
- * \brief Structure used a frame for usart communication
+ * \brief Structure used a frame for serial communication
  */
-typedef struct usartFrame{
+typedef struct serialFrame{
 	uint16_t seqNum;	/**< Sequence number of the frame */
 	char type;			/**< Type of the frame, can be either d or t */
 	uint32_t data[4];	/**< Data contained in the frame : table of 4 times or distances */
 	uint16_t crc;		/**< generated CRC from the three previous fields, used for integrity tests */
-} usartFrame;
+} serialFrame;
 
 
 /*
@@ -55,7 +55,7 @@ typedef struct usartFrame{
  * \param[in]	data4	fourth data to send in the frame
  * \return 		a frame initialized with the values given as parameters and generated sequence number and CRC
  */
-usartFrame createUsartFrame(char type, uint32_t data1, uint32_t data2, uint32_t data3, uint32_t data4);
+serialFrame createSerialFrame(char type, uint32_t data1, uint32_t data2, uint32_t data3, uint32_t data4);
 
 /*
 	API functions
@@ -79,26 +79,26 @@ uint8_t * createSendableFrame(char type, uint32_t data1, uint32_t data2, uint32_
  * \param[in]	uf		a pointer to retrieve the frame in its classic form
  * \return		0 for success, 1 if integrity check fails
  */
-uint8_t retrieveReadFrame(uint8_t * read, usartFrame * uf);
+uint8_t retrieveReadFrame(uint8_t * read, serialFrame * uf);
 
 
 /*
-	conversion function for usart frame
+	conversion function for serial frame
 */
 
 /**
  * \brief Conversion function : from frame to uint8_t *
- * \param[in]	uf	usart frame that will be converted
+ * \param[in]	uf	serial frame that will be converted
  * \return		the converted uint8_t * version of the frame
  */
-uint8_t * usartFrameToUint(usartFrame uf);
+uint8_t * serialFrameToUint(serialFrame uf);
 
 /**
  * \brief Conversion function : from uint8_t * to frame
- * param[in]	tab	a uint8_t * to convert into a frame (must be a converted version of a frame or might fail)
- * \return		a usartFrame generated from the uint8_t * given as parameter
+ * \param[in]	tab	a uint8_t * to convert into a frame (must be a converted version of a frame or might fail)
+ * \return		a serialFrame generated from the uint8_t * given as parameter
  */
-usartFrame usartFrameFromUint(uint8_t * toConvert);
+serialFrame serialFrameFromUint(uint8_t * toConvert);
 
 
 /*
@@ -118,9 +118,9 @@ uint16_t createCRC(char * tab, uint8_t tabLen);
 
 /**
  * \brief Transforms a frame into a char *
- * \param[in]	f	usart frame to convert
+ * \param[in]	f	serial frame to convert
  * \param[in]	tab	char * used to retrieve the converted form of the frame, this form is used for CRC calculation purpose
  */
-void usartFrameToChar(usartFrame f, char * tab);
+void serialFrameToChar(serialFrame f, char * tab);
 
 #endif

@@ -1,4 +1,4 @@
-#include "usartFrame.h"
+#include "serialFrame.h"
 #include "lib_crc.h"
 #include <stdio.h>
 
@@ -12,12 +12,12 @@ uint16_t currentUsartSeqNum = 0;
 /**
  * \brief Table used as return value for conversion function
  */
-uint8_t converted[CONVERTED_USART_FRAME_SIZE];
+uint8_t converted[CONVERTED_SERIAL_FRAME_SIZE];
 
 
-usartFrame createUsartFrame(char type, uint32_t data1, uint32_t data2, uint32_t data3, uint32_t data4){
+serialFrame createUsartFrame(char type, uint32_t data1, uint32_t data2, uint32_t data3, uint32_t data4){
 	// creation of the frame
-	usartFrame f;
+	serialFrame f;
 	// initializing the fields
 	f.seqNum = currentUsartSeqNum;
 	f.type = type;
@@ -27,11 +27,11 @@ usartFrame createUsartFrame(char type, uint32_t data1, uint32_t data2, uint32_t 
 	f.data[3]= data4;
 	// converting the frame into a char * for CRC generation purpose
 	char tab[19];
-	usartFrameToChar(f,tab);
+	serialFrameToChar(f,tab);
 	// CRC generation
 	f.crc = createCRC(tab, 19);
 	// sequence number management
-	if(currentUsartSeqNum<MAX_USART_SEQ_NUM)
+	if(currentUsartSeqNum<MAX_SERIAL_SEQ_NUM)
 		currentUsartSeqNum++;
 	else
 		currentUsartSeqNum = 0;
@@ -42,18 +42,18 @@ usartFrame createUsartFrame(char type, uint32_t data1, uint32_t data2, uint32_t 
 
 uint8_t * createSendableFrame(char type, uint32_t data1, uint32_t data2, uint32_t data3, uint32_t data4){
 	// creating a frame with the given parameters
-	usartFrame uf = createUsartFrame(type, data1, data2, data3, data4);
+	serialFrame uf = createUsartFrame(type, data1, data2, data3, data4);
 	// returning its converted uint8_t form
-	return usartFrameToUint(uf);
+	return serialFrameToUint(uf);
 }
 
 
-uint8_t retrieveReadFrame(uint8_t * read, usartFrame * uf){
+uint8_t retrieveReadFrame(uint8_t * read, serialFrame * uf){
 	// converting back the uint8_t form of the frame in its classic form
-	*uf = usartFrameFromUint(read);
+	*uf = serialFrameFromUint(read);
 	// generating the CRC for this converted form
 	char tab[19];
-	usartFrameToChar(*uf,tab);
+	serialFrameToChar(*uf,tab);
 	uint16_t crcRead = createCRC(tab, 19);
 	// comparing this generated CRC to the one contained in the frame to check integrity of the whole frame
 	if(crcRead==uf->crc)
@@ -63,7 +63,7 @@ uint8_t retrieveReadFrame(uint8_t * read, usartFrame * uf){
 }
 
 
-uint8_t * usartFrameToUint(usartFrame uf){
+uint8_t * serialFrameToUint(serialFrame uf){
 	// generation of the uint8_t * thanks to masks and divisions
 	// the uint8_t * used as return is a global variable so that no malloc should be used
 	converted[0] = (uint8_t)(uf.seqNum>>8);
@@ -92,10 +92,10 @@ uint8_t * usartFrameToUint(usartFrame uf){
 }
 
 
-usartFrame usartFrameFromUint(uint8_t * toConvert){
-	// calculating frame fields from uint8_t * assuming it is a valid converted form of an usart frame
+serialFrame serialFrameFromUint(uint8_t * toConvert){
+	// calculating frame fields from uint8_t * assuming it is a valid converted form of an serial frame
 	// using multiplication and casts to recreate frame fields
-	usartFrame uf;
+	serialFrame uf;
 	uf.seqNum = (((uint16_t)toConvert[0])<<8)+(uint16_t)(toConvert[1]);
 	uf.type = (char)toConvert[2];
 	uf.data[0] = ((uint32_t)(toConvert[3])<<24)+((uint32_t)(toConvert[4])<<16)+((uint32_t)(toConvert[5])<<8)+((uint32_t)(toConvert[6]));
@@ -127,7 +127,7 @@ uint16_t createCRC(char * tab, uint8_t tabLen){
 }
 
 
-void usartFrameToChar(usartFrame f, char * tab){
+void serialFrameToChar(serialFrame f, char * tab){
 	// generation of the char * thanks to masks and divisions
 	tab[0] = (char)(f.seqNum>>8);
 	tab[1] = (char)(f.seqNum & 0x00FF);
