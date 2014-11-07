@@ -22,7 +22,11 @@
  * \brief Maximum sequence number for the serial frames
  */
 #define MAX_SERIAL_SEQ_NUM 50
-
+/**
+ * \brief Synchronization characters
+ */
+#define CHAR_SYNC_1 'S'
+#define CHAR_SYNC_2 'D'
 /**
  * \brief Current serial frame sequence number
  */
