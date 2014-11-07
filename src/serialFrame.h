@@ -25,8 +25,8 @@
 /**
  * \brief Synchronization characters
  */
-#define CHAR_SYNC_1 'S'
-#define CHAR_SYNC_2 'D'
+#define SYNC_CHAR_1 'S'
+#define SYNC_CHAR_2 'D'
 /**
  * \brief Current serial frame sequence number
  */
