@@ -857,7 +857,16 @@ Flag_Com_Set_up=0;
     end
 
     function  Time_Display
+
+        % Save the sample.txt file to a new text fie
+        fid = fopen('capture.txt', 'w');
+        for i = 1:length(DataRecues.Val_Vect(:,1))
+            fprintf(fid, '%d\n', DataRecues.Val_Vect(i,1));
+        end
+        fclose(fid);
+        
         figure(h);
+        
          if (Flag.Dot==0)
              plot(DataRecues.Val_Vect((1:DataRecues.Val_Nb),1));
              plot(Main_Fig_Axes,DataRecues.Val_Vect((1:DataRecues.Val_Nb),1));
