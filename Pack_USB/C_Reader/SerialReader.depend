@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1415991717 source:e:\win7\mes documents\common-sources\pack_usb\serialcreader\serialreader\main.c
+	<stdio.h>
+	<stdlib.h>
+
