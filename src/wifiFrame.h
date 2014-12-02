@@ -18,7 +18,7 @@
 /**
  * \brief Converted size of a wifi frame in bytes
  */
-#define CONVERTED_WIFI_FRAME_SIZE 15
+#define CONVERTED_WIFI_FRAME_SIZE 16
 /**
  * \brief Maximum sequence number for the wifi frames
  */
@@ -33,9 +33,10 @@ extern uint16_t currentWifiSeqNum;
  * \brief Structure used a frame for wifi communication
  */
 typedef struct wifiFrame{
-	uint16_t seqNum;	/**< Sequence number of the frame */
-	char type;			/**< Type of the frame, can be either d or t */
-    uint32_t positions[3];	/**< Positions x, y, z */
+	uint16_t seqNum ;		/**< Sequence number of the frame */
+	char type ;			/**< Type of the frame, can be either d or t */
+    	uint32_t positions[3] ;		/**< Positions x, y, z */
+	char stateMission ;
 } wifiFrame;
 
 /**
@@ -46,7 +47,7 @@ typedef struct wifiFrame{
  * \param[in]	data3	third data to send in the frame
  * \return 		a frame initialized with the values given as parameters and a generated sequence number
  */
-wifiFrame createWifiFrame(char type, uint32_t data1, uint32_t data2, uint32_t data3);
+wifiFrame createWifiFrame(char type, uint32_t data1, uint32_t data2, uint32_t data3, char stateMission);
 
 /**
  * \brief Conversion function : from frame to char *
