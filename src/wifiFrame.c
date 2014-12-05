@@ -78,7 +78,15 @@ char * wifiFrameToChar(wifiFrame wf){
 	converted[12] = (char)((wf.positions[2]>>16)&0x00FF);
 	converted[13] = (char)((wf.positions[2]>>8)&0x0000FF);
 	converted[14] = (char)(wf.positions[2]&0x000000FF);
-	converted[15] = wf.stateMission;
+	converted[15] = (char)(wf.angle>>24);
+	converted[16] = (char)((wf.angle>>16)&0x00FF);
+	converted[17] = (char)((wf.angle>>8)&0x0000FF);
+	converted[18] = (char)(wf.angle&0x000000FF);
+	converted[19] = (char)(wf.cmd>>24);
+	converted[20] = (char)((wf.cmd>>16)&0x00FF);
+	converted[21] = (char)((wf.cmd>>8)&0x0000FF);
+	converted[22] = (char)(wf.cmd&0x000000FF);
+	converted[23] = wf.stateMission;
 	
 	return converted;
 }
@@ -93,8 +101,9 @@ wifiFrame wifiFrameFromChar(char * tab){
 	wf.positions[0] = ((uint32_t)((uint8_t)tab[3])<<24)+((uint32_t)((uint8_t)tab[4])<<16)+((uint32_t)((uint8_t)tab[5])<<8)+((uint32_t)((uint8_t)tab[6]));
 	wf.positions[1] = ((uint32_t)((uint8_t)tab[7])<<24)+((uint32_t)((uint8_t)tab[8])<<16)+((uint32_t)((uint8_t)tab[9])<<8)+((uint32_t)((uint8_t)tab[10]));
 	wf.positions[2] = ((uint32_t)((uint8_t)tab[11])<<24)+((uint32_t)((uint8_t)tab[12])<<16)+((uint32_t)((uint8_t)tab[13])<<8)+((uint32_t)((uint8_t)tab[14]));
-	wf.stateMission = tab[15];
+	wf.angle = ((uint32_t)((uint8_t)tab[15])<<24)+((uint32_t)((uint8_t)tab[16])<<16)+((uint32_t)((uint8_t)tab[17])<<8)+((uint32_t)((uint8_t)tab[18]));
+	wf.cmd = ((uint32_t)((uint8_t)tab[19])<<24)+((uint32_t)((uint8_t)tab[20])<<16)+((uint32_t)((uint8_t)tab[21])<<8)+((uint32_t)((uint8_t)tab[22]));
+	wf.stateMission = tab[23];
 
 	return wf;
 }
-
