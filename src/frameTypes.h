@@ -20,6 +20,14 @@
  */
 #define DISTANCE_FRAME 'd'
 /**
+ * \brief Position frame type
+ */
+#define POSITION_FRAME 'p'
+/**
+ * \brief Command frame type
+ */
+#define COMMAND_FRAME 'c'
+/**
  * \brief Discovery frame type
  */
 #define DISCOVERY_FRAME 'D'
@@ -43,5 +51,11 @@
  * \brief Mission state : Finished
  */
 #define MISSION_FINISHED  'F'
+
+/**
+ * \brief Mission state : none
+ */
+#define MISSION_NONE  'N'
+
 
 #endif

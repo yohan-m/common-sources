@@ -7,15 +7,17 @@ uint16_t currentWifiSeqNum = 0;
 char converted[CONVERTED_WIFI_FRAME_SIZE];
 
 
-wifiFrame createWifiFrame(char type, uint32_t data1, uint32_t data2, uint32_t data3, char stateMission){
+wifiFrame createWifiFrame(char type, uint32_t data1, uint32_t data2, uint32_t data3, uint32_t angle, uint32_t cmd, char stateMission){
 	// creation of the frame
 	wifiFrame f;
 	// initializing frame fields
 	f.seqNum = currentWifiSeqNum;
 	f.type = type;
-	f.positions[0]= data1;
-	f.positions[1]= data2;
-	f.positions[2]= data3;
+	f.positions[0] = data1;
+	f.positions[1] = data2;
+	f.positions[2] = data3;
+	f.angle = angle;
+	f.cmd = cmd;
 	f.stateMission = stateMission;
 
 	// sequence number management
@@ -24,6 +26,30 @@ wifiFrame createWifiFrame(char type, uint32_t data1, uint32_t data2, uint32_t da
 	else
 		currentWifiSeqNum = 0;
 		
+	return f;
+}
+
+
+wifiFrame createMissionFrame(uint32_t data1, uint32_t data2, uint32_t data3, uint32_t angle, char stateMission){
+	wifiFrame f = createWifiFrame(MISSION_FRAME,data1,data2,data3,angle,CMD_NONE,stateMission);
+	return f;
+}
+
+
+wifiFrame createPositionFrame(uint32_t data1, uint32_t data2, uint32_t data3){
+	wifiFrame f = createWifiFrame(POSITION_FRAME,data1,data2,data3,0,CMD_NONE,MISSION_NONE);
+	return f;
+}
+
+
+wifiFrame createCmdFrame(uint32_t cmd){
+	wifiFrame f = createWifiFrame(COMMAND_FRAME,0,0,0,0,cmd,MISSION_NONE);
+	return f;
+}
+
+
+wifiFrame createDiscoveryFrame(){
+	wifiFrame f = createWifiFrame(DISCOVERY_FRAME,0,0,0,0,CMD_NONE,MISSION_NONE);
 	return f;
 }
 
@@ -65,3 +91,4 @@ wifiFrame wifiFrameFromChar(char * tab){
 
 	return wf;
 }
+
