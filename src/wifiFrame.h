@@ -26,6 +26,15 @@
 #define MAX_WIFI_SEQ_NUM 50
 
 /**
+ * \brief Local (drone) port from where emission and reception will be done
+ */
+#define DRONE_PORT 30000
+/**
+ * \brief Remote (PC) port to which data will be sent
+ */
+#define PC_PORT 31000
+
+/**
  * \brief Current wifi frame sequence number
  */
 extern uint16_t currentWifiSeqNum;
