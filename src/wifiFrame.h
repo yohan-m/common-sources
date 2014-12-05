@@ -60,6 +60,8 @@ wifiFrame createCmdFrame(uint32_t cmd);
 
 wifiFrame createDiscoveryFrame();
 
+wifiFrame createChangeMasterFrame(char type);
+
 /**
  * \brief Conversion function : from frame to char *
  * \param[in]	wf	wifi frame that will be converted

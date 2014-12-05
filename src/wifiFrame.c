@@ -54,6 +54,12 @@ wifiFrame createDiscoveryFrame(){
 }
 
 
+wifiFrame createChangeMasterFrame(char type){
+	wifiFrame f = createWifiFrame(type,0,0,0,0,CMD_NONE,MISSION_NONE);
+	return f;
+}
+
+
 char * wifiFrameToChar(wifiFrame wf){
 	// generation of the char * thanks to masks and divisions
 	// the char * used as return is a global variable so that no malloc should be used

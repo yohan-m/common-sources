@@ -35,6 +35,14 @@
  * \brief Mission frame type
  */
 #define MISSION_FRAME 'M'
+/**
+ * \brief PC in control mode
+ */
+#define PC_CTRL 'P'
+/**
+ * \brief Drone in control mode (selfcontrol)
+ */
+#define DRONE_CTRL 'S'
 
 
 /**
