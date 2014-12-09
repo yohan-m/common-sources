@@ -17,7 +17,7 @@
 /**
  * \brief Converted size of an serial frame in bytes
  */
-#define CONVERTED_SERIAL_FRAME_SIZE 21
+#define CONVERTED_SERIAL_FRAME_SIZE 37
 /**
  * \brief Maximum sequence number for the serial frames
  */
@@ -39,6 +39,7 @@ typedef struct serialFrame{
 	uint16_t seqNum;	/**< Sequence number of the frame */
 	char type;			/**< Type of the frame, can be either d or t */
 	uint32_t data[4];	/**< Data contained in the frame : table of 4 times or distances */
+	uint32_t rss[4];	/**< RSS contained in the frame : table of 4 rss */
 	uint16_t crc;		/**< generated CRC from the three previous fields, used for integrity tests */
 } serialFrame;
 
@@ -59,7 +60,7 @@ typedef struct serialFrame{
  * \param[in]	data4	fourth data to send in the frame
  * \return 		a frame initialized with the values given as parameters and generated sequence number and CRC
  */
-serialFrame createSerialFrame(char type, uint32_t data1, uint32_t data2, uint32_t data3, uint32_t data4);
+serialFrame createSerialFrame(char type, uint32_t data1, uint32_t data2, uint32_t data3, uint32_t data4, uint32_t rss1, uint32_t rss2, uint32_t rss3, uint32_t rss4);
 
 /*
 	API functions
@@ -74,7 +75,7 @@ serialFrame createSerialFrame(char type, uint32_t data1, uint32_t data2, uint32_
  * \param[in]	data4	fourth data to send in the frame
  * \return 		a converted uint8_t version of a fully initialized frame with the given parameters and generated sequence number and CRC
  */
-uint8_t * createSendableFrame(char type, uint32_t data1, uint32_t data2, uint32_t data3, uint32_t data4);
+uint8_t * createSendableFrame(char type, uint32_t data1, uint32_t data2, uint32_t data3, uint32_t data4, uint32_t rss1, uint32_t rss2, uint32_t rss3, uint32_t rss4);
 
 
 /**
