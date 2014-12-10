@@ -15,7 +15,7 @@ uint16_t currentSerialSeqNum = 0;
 uint8_t converted[CONVERTED_SERIAL_FRAME_SIZE];
 
 
-serialFrame createSerialFrame(char type, uint32_t data1, uint32_t data2, uint32_t data3, uint32_t data4, uint32_t rss1, uint32_t rss2, uint32_t rss3, uint32_t rss4){
+serialFrame createSerialFrame(char type, int32_t data1, int32_t data2, int32_t data3, int32_t data4, int32_t rss1, int32_t rss2, int32_t rss3, int32_t rss4){
 	// creation of the frame
 	serialFrame f;
 	// initializing the fields
@@ -44,7 +44,7 @@ serialFrame createSerialFrame(char type, uint32_t data1, uint32_t data2, uint32_
 }
 
 
-uint8_t * createSendableFrame(char type, uint32_t data1, uint32_t data2, uint32_t data3, uint32_t data4, uint32_t rss1, uint32_t rss2, uint32_t rss3, uint32_t rss4){
+uint8_t * createSendableFrame(char type, int32_t data1, int32_t data2, int32_t data3, int32_t data4, int32_t rss1, int32_t rss2, int32_t rss3, int32_t rss4){
 	// creating a frame with the given parameters
 	serialFrame uf = createSerialFrame(type, data1, data2, data3, data4, rss1, rss2, rss3, rss4);
 	// returning its converted uint8_t form
@@ -118,14 +118,14 @@ serialFrame serialFrameFromUint(uint8_t * toConvert){
 	serialFrame uf;
 	uf.seqNum = (((uint16_t)toConvert[0])<<8)+(uint16_t)(toConvert[1]);
 	uf.type = (char)toConvert[2];
-	uf.data[0] = ((uint32_t)(toConvert[3])<<24)+((uint32_t)(toConvert[4])<<16)+((uint32_t)(toConvert[5])<<8)+((uint32_t)(toConvert[6]));
-	uf.data[1] = ((uint32_t)(toConvert[7])<<24)+((uint32_t)(toConvert[8])<<16)+((uint32_t)(toConvert[9])<<8)+((uint32_t)(toConvert[10]));
-	uf.data[2] = ((uint32_t)(toConvert[11])<<24)+((uint32_t)(toConvert[12])<<16)+((uint32_t)(toConvert[13])<<8)+((uint32_t)(toConvert[14]));
-	uf.data[3] = ((uint32_t)(toConvert[15])<<24)+((uint32_t)(toConvert[16])<<16)+((uint32_t)(toConvert[17])<<8)+((uint32_t)(toConvert[18]));
-	uf.rss[0] = ((uint32_t)(toConvert[19])<<24)+((uint32_t)(toConvert[20])<<16)+((uint32_t)(toConvert[21])<<8)+((uint32_t)(toConvert[22]));
-	uf.rss[1] = ((uint32_t)(toConvert[23])<<24)+((uint32_t)(toConvert[24])<<16)+((uint32_t)(toConvert[25])<<8)+((uint32_t)(toConvert[26]));
-	uf.rss[2] = ((uint32_t)(toConvert[27])<<24)+((uint32_t)(toConvert[28])<<16)+((uint32_t)(toConvert[29])<<8)+((uint32_t)(toConvert[30]));
-	uf.rss[3] = ((uint32_t)(toConvert[31])<<24)+((uint32_t)(toConvert[32])<<16)+((uint32_t)(toConvert[33])<<8)+((uint32_t)(toConvert[34]));
+	uf.data[0] = ((int32_t)(toConvert[3])<<24)+((int32_t)(toConvert[4])<<16)+((int32_t)(toConvert[5])<<8)+((int32_t)(toConvert[6]));
+	uf.data[1] = ((int32_t)(toConvert[7])<<24)+((int32_t)(toConvert[8])<<16)+((int32_t)(toConvert[9])<<8)+((int32_t)(toConvert[10]));
+	uf.data[2] = ((int32_t)(toConvert[11])<<24)+((int32_t)(toConvert[12])<<16)+((int32_t)(toConvert[13])<<8)+((int32_t)(toConvert[14]));
+	uf.data[3] = ((int32_t)(toConvert[15])<<24)+((int32_t)(toConvert[16])<<16)+((int32_t)(toConvert[17])<<8)+((int32_t)(toConvert[18]));
+	uf.rss[0] = ((int32_t)(toConvert[19])<<24)+((int32_t)(toConvert[20])<<16)+((int32_t)(toConvert[21])<<8)+((int32_t)(toConvert[22]));
+	uf.rss[1] = ((int32_t)(toConvert[23])<<24)+((int32_t)(toConvert[24])<<16)+((int32_t)(toConvert[25])<<8)+((int32_t)(toConvert[26]));
+	uf.rss[2] = ((int32_t)(toConvert[27])<<24)+((int32_t)(toConvert[28])<<16)+((int32_t)(toConvert[29])<<8)+((int32_t)(toConvert[30]));
+	uf.rss[3] = ((int32_t)(toConvert[31])<<24)+((int32_t)(toConvert[32])<<16)+((int32_t)(toConvert[33])<<8)+((int32_t)(toConvert[34]));
 	uf.crc = ((uint16_t)(toConvert[35]<<8))+((uint16_t)(toConvert[36]));
 	
 	return uf;
