@@ -1,0 +1,8 @@
+Pour ajouter l'enregistrement automatique des données à partir de l'interface graphique "SerialDataPlotter_v2" de T. Rocacher, il suffit de rajouter les lignes suivantes au début de la fonction Time_Display :
+
+	% Save the sample.txt file to a new text fie
+	fid = fopen('capture.txt', 'w');
+	for i = 1:length(DataRecues.Val_Vect(:,1))
+		fprintf(fid, '%d\n', DataRecues.Val_Vect(i,1));
+	end
+	fclose(fid);

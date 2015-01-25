@@ -1,4 +1,5 @@
-"""GUI d'acquisition sous realterm.
+"""GUI d'acquisition sur port série.
+Miquèl RAYNAL (raynal.miquel@gmail.com) - 2014
 
 Après une acquisition, un fichier capture.txt est créé.
 Cette interface demande le nom de l'acquisition (exemple : vol_agite_2).
@@ -66,11 +67,12 @@ def ouvrir_port():
 def start():
     """Lancement du décodage (appui sur "entrée" ou click sur le bouton)
     """
+    plt.close()
+    serialPortOpened.flushInput()
     nomOut = str(dt.datetime.today().hour) + "h"
     nomOut += str(dt.datetime.today().minute) + "m"
     nomOut += str(dt.datetime.today().second) + "s_"
     nomOut += str(ligne_nomOutput.get())
-    bouton_Start.config(state="disabled")
     lecture(nomOut)
     
 def lecture(nomOut):
@@ -81,8 +83,10 @@ def lecture(nomOut):
     
     if not serialPortOpened.isOpen:
         return -1
-    print("Opening " + nomOut + ".txt")
-    out = open(nomOut + ".txt", "w")
+
+    if saveFileOn.get():
+        print("Opening " + nomOut + ".txt")
+        out = open(nomOut + ".txt", "w")
 
     print("Start reading on COM port...")
     valeursB1 = list()
@@ -102,18 +106,23 @@ def lecture(nomOut):
                 val = 0
                 for byte in range(4):
                     #print(str(byte) + ": " + str(int(octets[byte+4*beacon])))
-                    val += int(octets[byte+4*beacon]) << (8 * byte)                
+                    val += int(octets[byte+4*beacon]) << (8 * byte)
+                #if val > 1e8:
+                #    val = -1
                 valeurs[beacon].append(val)              # Enregistrement en mémoire
                 #print(val)
-                out.write(str(val) + " ")
-            out.write("\n")
+                if saveFileOn.get():
+                    out.write(str(val) + " ")
+            if saveFileOn.get():
+                out.write("\n")
 
-        out.close()
+        if saveFileOn.get():
+            out.close()
 
         if plotOn.get():
             print("Plotting...")
             for beacon in range (4):
-                plt.plot(valeurs[beacon])
+                plt.plot(valeurs[beacon], 'x-')
             plt.legend(["Beacon 1 (39,5kHz)", "Beacon 2 (40,0kHz)", "Beacon 3 (40,5kHz)", "Beacon 4 (41,0kHz)"])
             plt.title("Output of the four filters from each beacon")
             plt.xlabel("Time (samples of 2ms)")
@@ -131,9 +140,9 @@ def lecture(nomOut):
             # Handler d'erreur
             pass
         
-    finally:
-        if not saveFileOn.get():
-            os.remove(nomOut + ".txt")
+    #finally:
+    #    if not saveFileOn.get():
+    #        os.remove(nomOut + ".txt")
     
 ### Création de la fenêtre racine de l'interface
 
@@ -200,7 +209,7 @@ label_extension.pack(side=LEFT, padx=0, pady=5)
 # Nombre d'échantillons
 nbSamples = StringVar()
 ligne_nbSamples = Entry(frameDecode, textvariable=nbSamples, width=6, justify=RIGHT)
-ligne_nbSamples.insert(0, "1024")
+ligne_nbSamples.insert(0, "650")
 label_samples = Label(frameDecode, text="samples ")
 
 # Options en checkbox
@@ -211,7 +220,6 @@ checkButtPlotOn = Checkbutton(frameDecode, text="Plot", variable=plotOn)
 checkButtPlotOn.select()
 checkButtSavePlotOn = Checkbutton(frameDecode, text="Autosave plot", variable=savePlotOn)
 checkButtSaveFileOn = Checkbutton(frameDecode, text="Save Ascii file", variable=saveFileOn)
-checkButtSaveFileOn.select()
 
 # Packing
 ligne_nbSamples.pack(side=LEFT, padx=2, pady=5)

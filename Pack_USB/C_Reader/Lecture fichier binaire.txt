@@ -1,0 +1,3 @@
+Le fichier main.c et le projet Code::Blocks associé effectuent la lecture d'un fichier binaire (1er paramètre).
+Ce type de fichier peut être généré par simple enregistrement brut depuis un terminal comme hyperterminal, realterm, putty ou autre.
+Un fichier de sortie (2ème paramètre) sera créé et contiendra la traduction du fichier original en une suite d'entiers 32bits non signés.
